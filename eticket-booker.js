@@ -13,7 +13,7 @@ let taskCard;
 
 function getTimeToStart() {
     const date = new Date();
-    date.setHours(13, 49, 1, 0); // hour:minute:second:millisecond
+    date.setHours(8, 0, 1, 0); // hour:minute:second:millisecond
     return date;
 }
 
@@ -228,19 +228,9 @@ function getTimeToStart() {
         } while (!element);
     }
 
-    function checkIfOk() {
-        return true;
-        /* const minDiff = (3 * 24 + 2) * 3600 * 1000;
-        const dayOfJourney = document.querySelector("p.date_time")?.innerText;
-        const dateOfJourney = new Date(dayOfJourney);
-        const diff = dateOfJourney - new Date();
-        return diff > minDiff; */
-    }
-
     async function main() {
         await waitForElement('div#search_result');
         console.log('~ ✅ Search result is shown.');
-        if (!checkIfOk()) return console.log('Be quicker');
         const cards = getCards();
         cards.forEach(card => injectButtonToCard(card));
         console.log('~ ✅ Buttons are injected to the cards.');
