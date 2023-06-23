@@ -13,7 +13,7 @@ let taskCard;
 
 function getTimeToStart() {
     const date = new Date();
-    date.setHours(8, 0, 1, 0); // hour:minute:second:millisecond
+    date.setHours(12, 0, 1, 0); // hour:minute:second:millisecond
     return date;
 }
 
