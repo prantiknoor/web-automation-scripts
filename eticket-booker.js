@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Train Ticket Booker
 // @namespace    https://github.com/prantiknoor/web-automation-scripts
-// @version      1.0
+// @version      1.0.1
 // @description  Book ticket faster than ever
 // @author       Prantik
 // @match 		 https://eticket.railway.gov.bd/booking/train/search/*
