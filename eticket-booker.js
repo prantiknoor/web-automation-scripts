@@ -4,7 +4,7 @@
 // @version      1.0
 // @description  Book ticket faster than ever
 // @author       Prantik
-// @match 		 https://eticket.railway.gov.bd/booking/train/search?*
+// @match 		 https://eticket.railway.gov.bd/booking/train/search/*
 // @icon         https://cdn-icons-png.flaticon.com/128/2570/2570693.png
 // @grant        none
 // ==/UserScript==
