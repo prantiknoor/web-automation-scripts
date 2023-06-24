@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Train Ticket Booker
 // @namespace    https://github.com/prantiknoor/web-automation-scripts
-// @version      1.0.1
+// @version      1.0.2
 // @description  Book ticket faster than ever
 // @author       Prantik
 // @match 		 https://eticket.railway.gov.bd/booking/train/search/*
@@ -13,7 +13,7 @@ let taskCard;
 
 function getTimeToStart() {
     const date = new Date();
-    date.setHours(12, 0, 1, 0); // hour:minute:second:millisecond
+    date.setHours(8, 0, 1, 0); // hour:minute:second:millisecond
     return date;
 }
 
