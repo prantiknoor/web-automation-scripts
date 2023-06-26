@@ -1,21 +1,79 @@
 // ==UserScript==
 // @name         Auto Train Ticket Booker
 // @namespace    https://github.com/prantiknoor/web-automation-scripts
-// @version      1.0.2
+// @version      2.0
 // @description  Book ticket faster than ever
 // @author       Prantik
-// @match 		 https://eticket.railway.gov.bd/booking/train/search/*
+// @match 		 https://eticket.railway.gov.bd/booking/train/*
 // @icon         https://cdn-icons-png.flaticon.com/128/2570/2570693.png
-// @grant        none
+// @grant        GM_addStyle
 // ==/UserScript==
 
 let taskCard;
 
-function getTimeToStart() {
-    const date = new Date();
-    date.setHours(8, 0, 1, 0); // hour:minute:second:millisecond
-    return date;
+function showPopupToGetTime() {
+    // Function to get the current time in HH:MM format
+    function getDefaultTime() {
+        const now = new Date();
+        if(now.getHours() < 8) {
+            now.setHours(8);
+            now.setMinutes(0);
+        }
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    }
+
+    // Create the popup window
+    const popupContainer = document.createElement('div');
+    popupContainer.className = 'popup-container';
+    popupContainer.innerHTML = `
+        <div class="popup-title">Auto ticket book</div>
+        <div class="popup-input">
+            <label for="time">When to start:</label>
+            <input type="time" id="time" name="time" value="${getDefaultTime()}">
+        </div>
+        <div class="popup-buttons">
+            <button id="cancel-btn">Cancel</button>
+            <button id="start-btn">Start Now</button>
+        </div>
+    `;
+
+    // Add the popup to the page
+    document.body.appendChild(popupContainer);
+
+    // Get the time input and buttons
+    const timeInput = document.getElementById('time');
+    const startBtn = document.getElementById('start-btn');
+    const startNowBtn = document.getElementById('start-now-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+
+    // Function to close the popup and remove it from the page
+    function closePopup() {
+        document.body.removeChild(popupContainer);
+    }
+
+    // Promise to handle the asynchronous behavior
+    return new Promise((resolve) => {
+        // Event listeners for the buttons
+        startBtn.addEventListener('click', () => {
+            const selectedTime = timeInput.value;
+            closePopup();
+            const date = new Date();
+            const [hours, minutes] = selectedTime.split(':');
+            date.setHours(hours);
+            date.setMinutes(minutes);
+            date.setSeconds(1);
+            resolve(date);
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            closePopup();
+            resolve(false);
+        });
+    });
 }
+
 
 (async function () {
     'use strict';
@@ -146,11 +204,11 @@ function getTimeToStart() {
         addEventListenerToBtn(card);
     }
 
-    function addEventListenerToBtn(card) {
+    async function addEventListenerToBtn(card) {
         const button = card.querySelector('button.btn-auto-book');
 
         let countdown = null;
-        button.addEventListener('click', function () {
+        button.addEventListener('click', async function () {
             if (!isUserLoggedIn()) {
                 return clickOnBookBtn(card);
             }
@@ -167,7 +225,7 @@ function getTimeToStart() {
             }
 
             taskCard = card;
-            let timeToStart = getTimeToStart();
+            let timeToStart = await showPopupToGetTime();
             button.style.background = "tomato";
 
             countdown = setInterval(async function () {
@@ -213,7 +271,7 @@ function getTimeToStart() {
         if (durationInSeconds < 1) return 'Starting...';
         return durationInSeconds <= 30
             ? rtf.format(Math.floor(durationInSeconds), 'second')
-            : rtf.format(Math.ceil(durationInSeconds / 60), 'minute');
+        : rtf.format(Math.ceil(durationInSeconds / 60), 'minute');
     }
 
 
@@ -238,3 +296,63 @@ function getTimeToStart() {
 
     main();
 })();
+
+GM_addStyle(`
+    .popup-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        border-radius: 4px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        z-index: 9999;
+        font-family: Arial, sans-serif;
+    }
+
+    .popup-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .popup-input {
+        margin-bottom: 15px;
+    }
+
+    .popup-input label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .popup-input input[type="time"] {
+        padding: 6px 10px;
+        font-size: 14px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .popup-buttons {
+        text-align: center;
+    }
+
+    .popup-buttons button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .popup-buttons button:last-child {
+        margin-right: 0;
+    }
+
+    #start-btn {
+        border: 1px solid #03a84e;
+    }
+`);
