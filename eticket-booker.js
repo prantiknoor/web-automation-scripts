@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         Auto Train Ticket Booker
-// @namespace    https://github.com/prantiknoor/web-automation-scripts
-// @version      3.0
-// @description  Book ticket faster than ever
-// @author       Prantik
-// @match 		 https://eticket.railway.gov.bd/booking/train/*
-// @icon         https://cdn-icons-png.flaticon.com/128/2570/2570693.png
-// @grant        GM_addStyle
+// @name          Auto Train Ticket Booker
+// @namespace     https://github.com/prantiknoor/web-automation-scripts
+// @version       3.1
+// @description   Book ticket faster than ever
+// @author        Prantik
+// @match         https://eticket.railway.gov.bd/booking/train/*
+// @icon          https://cdn-icons-png.flaticon.com/128/2570/2570693.png
+// @grant         GM_addStyle
 // ==/UserScript==
 
 let taskCard;
@@ -32,14 +32,14 @@ function showPopupToGetTime() {
   const popupContainer = document.createElement('div');
   popupContainer.className = 'popup-container';
   popupContainer.innerHTML = `
-        <div class="popup-title">Auto ticket book</div>
+        <div class="popup-title">Auto eTicket Booker</div>
         <div class="popup-input">
             <label for="time">When to start:</label>
             <input type="time" id="time" name="time" value="${getDefaultTime()}">
         </div>
         <div class="popup-buttons">
             <button id="cancel-btn">Cancel</button>
-            <button id="start-btn">Start Now</button>
+            <button id="start-btn">Start</button>
         </div>
     `;
 
@@ -222,7 +222,7 @@ async function addEventListenerToBtn(card) {
 
   let countdown = null;
   button.addEventListener('click', async function () {
-    if (!isUserLoggedIn()) {
+    if (!(await isUserLoggedIn())) {
       return clickOnBookBtn(card);
     }
 
@@ -328,7 +328,7 @@ GM_addStyle(`
     }
 
     .popup-title {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         margin-bottom: 10px;
     }
@@ -352,20 +352,17 @@ GM_addStyle(`
     }
 
     .popup-buttons {
-        text-align: center;
+        display: flex;
+        gap: 10px;
+        width: 180px;
     }
 
     .popup-buttons button {
-        padding: 8px 16px;
+        padding: 7px 14px;
         border: none;
         border-radius: 4px;
         font-size: 14px;
-        cursor: pointer;
-        margin-right: 10px;
-    }
-
-    .popup-buttons button:last-child {
-        margin-right: 0;
+        flex: 1;
     }
 
     #start-btn {
